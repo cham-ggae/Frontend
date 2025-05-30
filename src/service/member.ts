@@ -17,3 +17,8 @@ export const logout = async (): Promise<logoutInfo> => {
   const { data } = await api.post("/logout");
   return data;
 }
+
+export const test = async (): Promise<string> => {
+  const { data } = await api.get("/test");
+  return data;
+}
