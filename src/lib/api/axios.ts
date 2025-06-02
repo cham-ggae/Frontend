@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useAuthStore } from '@/lib/store/authStore'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8090'
 
 /**
  * 인증이 불필요한 기본 API 클라이언트
