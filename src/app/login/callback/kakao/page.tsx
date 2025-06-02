@@ -9,7 +9,7 @@ import { handleKakaoCallback } from '@/lib/api/auth'
  * 카카오 OAuth 콜백 처리 페이지
  * - URL에서 인가 코드 추출
  * - 백엔드에 토큰 교환 요청
- * - 성공 시 대시보드로 이동
+ * - 성공 시 루트 페이지 이동
  * - 실패 시 로그인 페이지로 이동
  */
 export default function KakaoCallbackPage() {
@@ -40,7 +40,7 @@ export default function KakaoCallbackPage() {
 
                 setStatus('success')
 
-                // 짧은 딜레이 후 이동
+                // 짧은 딜레이 후 루트 페이지 이동
                 setTimeout(() => {
                     router.push('/')
                 }, 1500)
