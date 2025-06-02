@@ -21,7 +21,7 @@ export interface KakaoCallbackRequest {
  * - 사용자를 카카오 로그인 페이지로 이동
  */
 export const startKakaoLogin = (): void => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/authorize`
+    window.location.href = `${process.env.NEXT_PUBLIC_ADDR}/authorize`
 }
 
 /**

@@ -34,7 +34,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
                 }
 
                 // 토큰이 있으면 사용자 정보 가져오기 시도
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_ADDR}/api/auth/me`, {
                     headers: {
                         'Authorization': `Bearer ${accessToken}`,
                         'Content-Type': 'application/json'
