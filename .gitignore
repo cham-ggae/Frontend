@@ -1,4 +1,5 @@
 package-lock.json
+/.next/
 /.idea
 .env
 /node_modules
@@ -22,3 +23,12 @@ next-env.d.ts
 .idea/
 *.swp
 *.swo
+
+# fonts
+.next/static/chunks/
+.next/cache/
+.next/server/
+.next/build-manifest.json
+.next/export-marker.json
+.next/prerender-manifest.json
+.next/routes-manifest.json
