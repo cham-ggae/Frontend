@@ -15,7 +15,6 @@ export function middleware(request: NextRequest) {
         request.cookies.get('accessToken')?.value ||
         request.headers.get('authorization')?.replace('Bearer ', '')
 
-    // ===== 보호할 경로만 명시 (화이트리스트 방식) =====
     const protectedPaths = [
         '/admin',         // 관리자
         // 여기에 보호 라우트 경로 추가
