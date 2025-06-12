@@ -11,6 +11,9 @@ package-lock.json
 .env.test.local
 .env.production.local
 
+# Next.js build output
+/.next
+
 # Vercel
 .vercel
 
