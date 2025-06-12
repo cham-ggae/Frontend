@@ -1,6 +1,8 @@
+import { authenticatedApiClient } from '@/lib/api/axios';
 import { useAuthStore } from '@/store/useAuthStore';
 import { logoutInfo, userInfo } from '@/types/member';
 import api from '@/utils/http-commons'
+
 
 export const login = async (code: string): Promise<userInfo> => {
   const res = await api.post('/kakao', { code });
@@ -19,6 +21,6 @@ export const logout = async (): Promise<logoutInfo> => {
 }
 
 export const test = async (): Promise<string> => {
-  const { data } = await api.get("/test");
+  const { data } = await authenticatedApiClient.get("/test");
   return data;
 }
