@@ -28,6 +28,7 @@ export default function LoginPage() {
                 >
                     카카오로 로그인
                 </button>
+
             </div>
         </div>
     )

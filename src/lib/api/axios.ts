@@ -1,5 +1,6 @@
-import axios from 'axios'
+import axios, {InternalAxiosRequestConfig} from 'axios'
 import { useAuthStore } from '@/lib/store/authStore'
+import './interceptors'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_ADDR || 'http://localhost:8090'
 
