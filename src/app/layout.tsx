@@ -6,6 +6,7 @@ import { MobileNav } from "@/components/mobile-nav"
 import { ThemeProvider } from "@/contexts/theme-context"
 import { FamilySpaceProvider } from "@/contexts/family-space-context"
 import { PlantProvider } from "@/contexts/plant-context"
+import AuthProvider from "@/components/providers/AuthProvider";
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <html lang="ko">
       <body className={inter.className}>
       <ThemeProvider>
+          <AuthProvider>
         <FamilySpaceProvider>
           <PlantProvider>
             <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-[#81C784] p-4 flex items-center">
@@ -32,6 +34,7 @@ export default function RootLayout({
             <div className="md:pt-0 pt-16">{children}</div>
           </PlantProvider>
         </FamilySpaceProvider>
+          </AuthProvider>
       </ThemeProvider>
       </body>
       </html>
