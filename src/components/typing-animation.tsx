@@ -38,7 +38,7 @@ export function TypingAnimation({ text, className = "", speed = 100 }: TypingAni
     <motion.div className={className} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       {formatText(displayedText)}
       {currentIndex < text.length && (
-        <motion.span
+        <motion.div
           animate={{ opacity: [1, 0] }}
           transition={{ duration: 0.8, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" }}
           className="inline-block w-0.5 h-6 bg-current ml-1"
