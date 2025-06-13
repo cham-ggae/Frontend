@@ -6,6 +6,8 @@ import { Home, MessageCircle, Users, Sprout, User, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useFamilySpace } from "@/contexts/family-space-context"
+import {Button} from "@/components/ui/button";
+import {useAuth} from "@/hooks/useAuth";
 
 interface SidebarProps {
   className?: string
@@ -14,7 +16,7 @@ interface SidebarProps {
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
   const { hasFamilySpace } = useFamilySpace()
-
+  const {logout} = useAuth();
   const menuItems = [
     {
       href: "/dashboard",
@@ -105,13 +107,16 @@ export function Sidebar({ className }: SidebarProps) {
 
       {/* Logout */}
       <div className="p-3 mt-auto">
-        <Link
-          href="/"
-          className="flex items-center gap-3 px-3 py-2 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+        <Button
+            onClick={logout}
+            className={cn(
+                "w-full flex items-center gap-3 px-3 py-3 rounded-md transition-colors",
+                "bg-[#81C784] hover:bg-[#66BB6A] text-white"
+            )}
         >
           <LogOut className="w-5 h-5" />
           <span>로그아웃</span>
-        </Link>
+        </Button>
       </div>
     </aside>
   )

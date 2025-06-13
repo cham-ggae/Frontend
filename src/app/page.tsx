@@ -8,6 +8,7 @@ import Link from "next/link"
 import { TypingAnimation } from "@/components/typing-animation"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useTheme } from "@/contexts/theme-context"
+import KakaoLoginButton from "@/components/login/kakaoLoginButton";
 
 export default function HomePage() {
   const { isDarkMode } = useTheme()
@@ -119,9 +120,7 @@ export default function HomePage() {
           >
             <ThemeToggle className="border-gray-300" />
             <Link href="/basic-info">
-              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-6 py-2 rounded-lg">
-                카카오로 시작하기
-              </Button>
+              <KakaoLoginButton />
             </Link>
           </motion.div>
         </div>
@@ -145,7 +144,7 @@ export default function HomePage() {
                 <span className="text-green-600">MODi</span>와 함께
               </h1>
             </motion.div>
-            <motion.p
+            <motion.div
               className={`text-xl mb-8 leading-relaxed ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -155,16 +154,14 @@ export default function HomePage() {
                 text="최적의 통신 요금제 추천부터 가족과 함께하는 디지털 생활까지, MODi가 당신의 디지털 라이프를 더 스마트하게 만들어 드립니다."
                 speed={50}
               />
-            </motion.p>
+            </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 3.5 }}
             >
               <Link href="/basic-info">
-                <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-8 py-3 text-lg rounded-lg">
-                  카카오로 시작하기
-                </Button>
+                <KakaoLoginButton />
               </Link>
             </motion.div>
           </motion.div>
@@ -336,9 +333,6 @@ export default function HomePage() {
           >
             <Link href="/basic-info">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-8 py-4 text-lg rounded-lg">
-                  카카오로 시작하기
-                </Button>
               </motion.div>
             </Link>
           </motion.div>
