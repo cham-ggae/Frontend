@@ -1,245 +1,362 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { MessageCircle, Brain, Users, BarChart3, Sparkles, ArrowRight, CheckCircle, Star } from "lucide-react"
-import LoginLogoutButton from "@/components/auth/LoginLogoutButton";
-import {authenticatedApiClient} from '@/lib/api/axios';
-import TestBtn from "@/components/TestBtn"
+import { MessageCircle, Users, Sprout, Phone } from "lucide-react"
+import Link from "next/link"
+import { TypingAnimation } from "@/components/typing-animation"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { useTheme } from "@/contexts/theme-context"
 
 export default function HomePage() {
-  const [isVisible, setIsVisible] = useState(false)
+  const { isDarkMode } = useTheme()
 
-  const handleTest = () => {
-    authenticatedApiClient.post('/test');
+  // Animation variants (이전 버전과 동일)
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
   }
 
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
+  const cardVariants = {
+    hidden: (direction: string) => ({
+      opacity: 0,
+      x: direction === "left" ? -100 : direction === "right" ? 100 : 0,
+      y: direction === "top" ? -100 : direction === "bottom" ? 100 : 0,
+    }),
+    visible: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12,
+        duration: 0.8,
+      },
+    },
+  }
+
+  const ctaVariants = {
+    hidden: {
+      opacity: 0,
+      y: 100,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12,
+        duration: 0.8,
+        delay: 0,
+      },
+    },
+  }
+
+  const heroImageVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.8,
+      rotate: -10,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12,
+        duration: 1,
+        delay: 0.5,
+      },
+    },
+  }
+
+  const pulseVariants = {
+    pulse: {
+      scale: [1, 1.1, 1],
+      opacity: [0.2, 0.3, 0.2],
+      transition: {
+        duration: 2,
+        repeat: Number.POSITIVE_INFINITY,
+        ease: "easeInOut",
+      },
+    },
+  }
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        {/* Header */}
-        <header className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
+    <div className={`min-h-screen ${isDarkMode ? "bg-gray-900 text-white" : "bg-green-50"}`}>
+      {/* Header */}
+      <motion.header
+        className={`${isDarkMode ? "bg-gray-800" : "bg-green-50"} py-6`}
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <motion.div
+            className="text-2xl font-bold text-green-700"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            MODi
+          </motion.div>
+          <motion.div
+            className="flex items-center gap-4"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <ThemeToggle className="border-gray-300" />
+            <Link href="/basic-info">
+              <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-6 py-2 rounded-lg">
+                카카오로 시작하기
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
+      </motion.header>
+
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto px-6 py-16">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            <TypingAnimation
+              text="모두의 디지털 생활,"
+              className={`text-5xl font-bold mb-6 leading-tight ${isDarkMode ? "text-white" : "text-green-800"}`}
+              speed={150}
+            />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 2.5 }}>
+              <h1 className={`text-5xl font-bold mb-6 leading-tight ${isDarkMode ? "text-white" : "text-green-800"}`}>
+                <span className="text-green-600">MODi</span>와 함께
+              </h1>
+            </motion.div>
+            <motion.p
+              className={`text-xl mb-8 leading-relaxed ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 3 }}
+            >
+              <TypingAnimation
+                text="최적의 통신 요금제 추천부터 가족과 함께하는 디지털 생활까지, MODi가 당신의 디지털 라이프를 더 스마트하게 만들어 드립니다."
+                speed={50}
+              />
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 3.5 }}
+            >
+              <Link href="/basic-info">
+                <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-8 py-3 text-lg rounded-lg">
+                  카카오로 시작하기
+                </Button>
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          {/* Hero Graphic */}
+          <motion.div className="flex justify-center" variants={heroImageVariants} initial="hidden" animate="visible">
+            <div className="relative">
+              <div className="w-80 h-80 relative">
+                <motion.div
+                  className="absolute inset-0 bg-green-200 rounded-full opacity-30"
+                  variants={pulseVariants}
+                  animate="pulse"
+                />
+                <motion.div
+                  className="absolute top-8 left-1/2 transform -translate-x-1/2"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 1 }}
+                >
+                  <div className="w-32 h-40 bg-green-500 rounded-t-full rounded-b-lg relative">
+                    <motion.div
+                      className="absolute top-8 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center"
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+                    >
+                      <Sprout className="w-8 h-8 text-green-800" />
+                    </motion.div>
+                  </div>
+                </motion.div>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              CommAI
-            </span>
             </div>
-            <Badge variant="secondary" className="animate-pulse">
-              <Sparkles className="w-3 h-3 mr-1" />
-              Beta
-            </Badge>
-          </div>
-        </header>
+          </motion.div>
+        </div>
+      </section>
 
-        {/* Hero Section */}
-        <section className="container mx-auto px-4 py-16 text-center">
-          <div
-              className={`transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-          >
-            <Badge className="mb-6 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200 hover:scale-105 transition-transform">
-              <Star className="w-3 h-3 mr-1" />
-              AI 기반 통신 분석
-            </Badge>
-
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight">
-              당신의 소통 스타일을
-              <br />
-              <span className="relative">
-              AI가 분석합니다
-              <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full transform scale-x-0 animate-[scaleX_2s_ease-in-out_0.5s_forwards]"></div>
-            </span>
-            </h1>
-
-            <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-              최신 AI 기술로 당신의 대화 패턴을 분석하고, 개인화된 소통 개선 방안을 제시합니다.
-            </p>
-
-            <LoginLogoutButton />
-
-          </div>
-
-          {/* Feature Preview */}
-          <div
-              className={`grid md:grid-cols-3 gap-6 mt-16 transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-          >
-            {[
-              {
-                icon: MessageCircle,
-                title: "대화 패턴 분석",
-                description: "AI가 당신의 대화 스타일과 선호도를 정확히 파악합니다",
-              },
-              {
-                icon: BarChart3,
-                title: "상세한 리포트",
-                description: "개인화된 분석 결과와 개선 방안을 제공합니다",
-              },
-              {
-                icon: Users,
-                title: "관계 개선",
-                description: "더 나은 소통을 위한 맞춤형 조언을 받아보세요",
-              },
-            ].map((feature, index) => (
-                <Card
-                    key={index}
-                    className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-2 border-0 bg-white/70 backdrop-blur-sm"
-                >
-                  <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <feature.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                    <p className="text-gray-600 text-sm">{feature.description}</p>
-                  </CardContent>
-                </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="container mx-auto px-4 py-16">
-          <div
-              className={`text-center mb-12 transition-all duration-1000 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              왜{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">CommAI</span>를
-              선택해야 할까요?
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              최첨단 AI 기술과 심리학적 분석을 결합하여 정확하고 유용한 인사이트를 제공합니다
-            </p>
-          </div>
-
-          <div
-              className={`grid md:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-1000 delay-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-          >
-            {[
-              {
-                title: "정확한 분석",
-                description: "95% 이상의 정확도로 통신 패턴을 분석합니다",
-                stat: "95%",
-              },
-              {
-                title: "빠른 결과",
-                description: "단 5분만에 상세한 분석 결과를 확인하세요",
-                stat: "5분",
-              },
-              {
-                title: "개인화",
-                description: "당신만을 위한 맞춤형 개선 방안을 제시합니다",
-                stat: "100%",
-              },
-              {
-                title: "지속 지원",
-                description: "분석 후에도 계속해서 성장을 도와드립니다",
-                stat: "24/7",
-              },
-            ].map((item, index) => (
-                <Card
-                    key={index}
-                    className="text-center p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-white to-gray-50"
-                >
-                  <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                    {item.stat}
-                  </div>
-                  <h3 className="font-semibold mb-2">{item.title}</h3>
-                  <p className="text-gray-600 text-sm">{item.description}</p>
-                </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* How it Works */}
-        <section className="bg-gradient-to-r from-blue-50 to-purple-50 py-16">
-          <div className="container mx-auto px-4">
-            <div
-                className={`text-center mb-12 transition-all duration-1000 delay-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+      {/* Features Section */}
+      <section className="max-w-7xl mx-auto px-6 pb-16">
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          {/* Feature Card 1 */}
+          <motion.div variants={cardVariants} custom="left">
+            <Card
+              className={`${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-green-200"} rounded-2xl hover:shadow-lg transition-shadow`}
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">어떻게 작동하나요?</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                간단한 3단계로 당신의 소통 스타일을 분석하고 개선 방안을 제시합니다
-              </p>
-            </div>
+              <CardContent className="p-8 text-center">
+                <motion.div
+                  className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <MessageCircle className="w-8 h-8 text-white" />
+                </motion.div>
+                <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? "text-white" : "text-green-800"}`}>
+                  요금제 추천 챗봇
+                </h3>
+                <p className={`${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
+                  개인 맞춤형 통신 요금제를 AI 챗봇이 분석하고 추천해드립니다.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-            <div
-                className={`grid md:grid-cols-3 gap-8 transition-all duration-1000 delay-900 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          {/* Feature Card 2 */}
+          <motion.div variants={cardVariants} custom="top">
+            <Card
+              className={`${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-green-200"} rounded-2xl hover:shadow-lg transition-shadow`}
             >
-              {[
-                {
-                  step: "01",
-                  title: "로그인 & 설정",
-                  description: "카카오 계정으로 간편하게 로그인하고 기본 정보를 입력하세요",
-                  icon: Users,
-                },
-                {
-                  step: "02",
-                  title: "AI 분석",
-                  description: "고급 AI 알고리즘이 당신의 대화 패턴과 소통 스타일을 분석합니다",
-                  icon: Brain,
-                },
-                {
-                  step: "03",
-                  title: "결과 확인",
-                  description: "상세한 분석 결과와 개인화된 개선 방안을 확인하세요",
-                  icon: BarChart3,
-                },
-              ].map((step, index) => (
-                  <div key={index} className="relative">
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 hover:scale-110 transition-transform">
-                        <step.icon className="w-8 h-8 text-white" />
-                      </div>
-                      <div className="text-sm font-semibold text-blue-600 mb-2">STEP {step.step}</div>
-                      <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                      <p className="text-gray-600">{step.description}</p>
-                    </div>
-                    {index < 2 && (
-                        <div className="hidden md:block absolute top-8 left-full w-full">
-                          <ArrowRight className="w-6 h-6 text-gray-300 mx-auto" />
-                        </div>
-                    )}
-                  </div>
-              ))}
-            </div>
-          </div>
-        </section>
+              <CardContent className="p-8 text-center">
+                <motion.div
+                  className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6"
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Users className="w-8 h-8 text-white" />
+                </motion.div>
+                <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? "text-white" : "text-green-800"}`}>
+                  가족 스페이스
+                </h3>
+                <p className={`${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
+                  가족 구성원과 함께 스페이스를 만들고 통신 생활을 공유하세요.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-        {/* CTA Section */}
-        <section className="container mx-auto px-4 py-16 text-center">
-          <div
-              className={`transition-all duration-1000 delay-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+          {/* Feature Card 3 */}
+          <motion.div variants={cardVariants} custom="bottom">
+            <Card
+              className={`${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-green-200"} rounded-2xl hover:shadow-lg transition-shadow`}
+            >
+              <CardContent className="p-8 text-center">
+                <motion.div
+                  className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Sprout className="w-8 h-8 text-white" />
+                </motion.div>
+                <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? "text-white" : "text-green-800"}`}>
+                  새싹 키우기
+                </h3>
+                <p className={`${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
+                  가족과 함께 새싹을 키우며 출석 체크와 활동을 통해 성장시켜보세요.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Feature Card 4 */}
+          <motion.div variants={cardVariants} custom="right">
+            <Card
+              className={`${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-green-200"} rounded-2xl hover:shadow-lg transition-shadow`}
+            >
+              <CardContent className="p-8 text-center">
+                <motion.div
+                  className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6"
+                  whileHover={{ scale: 1.1, rotate: -5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Phone className="w-8 h-8 text-white" />
+                </motion.div>
+                <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? "text-white" : "text-green-800"}`}>음성 기능</h3>
+                <p className={`${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}>
+                  TTS와 STT 기능으로 더 편리하게 챗봇과 대화하세요.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* CTA Section */}
+      <motion.section
+        className={`${isDarkMode ? "bg-gray-800" : "bg-green-100/30"} py-20`}
+        variants={ctaVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+      >
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <motion.h2
+            className={`text-4xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-green-800"}`}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0 }}
+            viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">지금 바로 시작해보세요!</h2>
-            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-              AI가 분석한 당신만의 소통 스타일을 확인하고, 더 나은 관계를 만들어가는 첫 걸음을 내딛어보세요.
-            </p>
-
-
-          </div>
-        </section>
+            지금 바로 시작하세요
+          </motion.h2>
+          <motion.p
+            className={`text-xl mb-8 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            viewport={{ once: true }}
+          >
+            MODi와 함께 최적의 통신 요금제를 찾고, 가족과 함께 디지털 생활을 더 스마트하게 관리해보세요.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <Link href="/basic-info">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-8 py-4 text-lg rounded-lg">
+                  카카오로 시작하기
+                </Button>
+              </motion.div>
+            </Link>
+          </motion.div>
+        </div>
+      </motion.section>
 
       {/* Footer */}
-      <footer className="bg-gray-50 border-t py-8">
-        <div className="container mx-auto px-4 text-center text-gray-600">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Brain className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-semibold">CommAI</span>
-          </div>
-          <p className="text-sm">© 2024 CommAI. AI 기반 통신 성향 분석 서비스</p>
+      <motion.footer
+        className="bg-green-600 text-white py-8"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+      >
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <p className="text-green-100">© 2025 MODi. All rights reserved.</p>
         </div>
-        <TestBtn />
-      </footer>
+      </motion.footer>
     </div>
   )
 }
