@@ -7,3 +7,9 @@ export interface message {
     arguments: string;
   };
 }
+
+export interface familyMember {
+  name: string;
+  profile_image: string;
+  plan_name: string;
+}
