@@ -3,6 +3,7 @@ import { Button } from '../ui/button';
 import { Mic, Send } from 'lucide-react';
 import { Input } from '../ui/input';
 import { useTheme } from '@/contexts/theme-context';
+import SttButton from './SttButton';
 
 interface ChatbotInputProps {
   isFamilyMode: boolean;
@@ -55,9 +56,7 @@ const ChatbotInput = ({ isFamilyMode, setMessages }: ChatbotInputProps) => {
   return (
     <div className={`${isDarkMode ? "bg-gray-800 border-gray-600" : "bg-white border-[#81C784]"} border-t p-4`}>
       <div className="max-w-5xl mx-auto flex gap-2">
-        <Button variant="outline" size="icon" className="border-[#81C784] text-[#388E3C]">
-          <Mic className="w-4 h-4" />
-        </Button>
+        <SttButton />
         <Input
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

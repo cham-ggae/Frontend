@@ -10,8 +10,8 @@ const ChatBotPage = () => {
   return (
     <div className={`flex h-screen ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       <Sidebar className="hidden md:flex" />
-
       <ChatHeader isDarkMode={isDarkMode} />
+
     </div>
   );
 };
