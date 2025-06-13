@@ -1,4 +1,8 @@
+import { motion as originalMotion } from 'framer-motion'
+
 declare module 'framer-motion' {
+    export const motion: typeof originalMotion
+
     export interface Variants {
         [key: string]: any
     }
@@ -7,7 +11,5 @@ declare module 'framer-motion' {
         [key: string]: any
     }
 
-    export interface MotionProps {
-        [key: string]: any
-    }
+    export * from 'framer-motion'
 }
