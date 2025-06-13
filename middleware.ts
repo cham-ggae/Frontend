@@ -3,9 +3,9 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 /**
- *  인증 미들웨어
+ * 인증 미들웨어
  * - 보호할 경로만 명시 (기본은 모두 공개)
- * - 보호 라우트 추가
+ * - 로그인된 사용자의 로그인/메인 페이지 접근 제한
  */
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
@@ -17,8 +17,17 @@ export function middleware(request: NextRequest) {
 
     const protectedPaths = [
         '/admin',         // 관리자
+        '/dashboard',     // 대시보드
         // 여기에 보호 라우트 경로 추가
     ]
+
+    // 로그인된 사용자의 로그인/메인 페이지 접근 제한
+    if (accessToken) {
+        // 로그인된 사용자가 로그인 페이지나 메인 페이지 접근 시
+        if (pathname === '/login' || pathname === '/') {
+            return NextResponse.redirect(new URL('/dashboard', request.url))
+        }
+    }
 
     // 보호된 경로인지 확인
     const isProtectedPath = protectedPaths.some(path =>
@@ -37,15 +46,10 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(loginUrl)
     }
 
-    // 이미 로그인한 사용자가 로그인 페이지 접근 시 홈으로
-    if (pathname === '/login' && accessToken) {
-        return NextResponse.redirect(new URL('/', request.url))
-    }
-
     return NextResponse.next()
 }
 
-//  성능 최적화 매처 설정
+// 성능 최적화 매처 설정
 export const config = {
     matcher: [
         /*
