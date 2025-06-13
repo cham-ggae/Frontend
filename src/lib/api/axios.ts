@@ -8,15 +8,21 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_ADDR || 'http://localhost:8090'
  * auth.ts의 refreshAccessToken 함수와 동일
  */
 const refreshAccessToken = async (): Promise<string> => {
-    const response = await apiClient.post('/refresh')
-    const authHeader = response.headers.authorization
-    const newToken = authHeader?.replace('Bearer ', '')
-
-    if (!newToken) {
-        throw new Error('새로운 액세스 토큰을 받지 못했습니다')
+    const response = await apiClient.post(
+        '/refresh',
+        {},                              // 빈 바디
+        { withCredentials: true }        // ★ 이 옵션이 있어야 기존 refreshToken 쿠키가 전송됩니다
+    )
+    // 헤더에서 꺼낼 수도 있고
+    const authHeader = response.headers['authorization'] || response.headers['Authorization']
+    if (authHeader?.startsWith('Bearer ')) {
+        return authHeader.substring(7)
     }
-
-    return newToken
+    // 아니면 바디에서 꺼내고
+    if (response.data?.accessToken) {
+        return response.data.accessToken as string
+    }
+    throw new Error('새 토큰을 찾을 수 없습니다')
 }
 
 /**
@@ -42,13 +48,13 @@ export const authenticatedApiClient = axios.create({
 let isRefreshing = false
 let failedQueue: Array<{
     resolve: (token: string) => void
-    reject: (error: any) => void
+    reject: (error: Error | AxiosError) => void
 }> = []
 
 /**
  * 대기 중인 요청들 처리
  */
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: Error | AxiosError | null, token: string | null = null) => {
     failedQueue.forEach(({ resolve, reject }) => {
         if (error) {
             reject(error)
@@ -94,9 +100,9 @@ authenticatedApiClient.interceptors.response.use(
 
         console.log('API 응답 에러:', error.response?.status, error.config?.url)
 
-        // 401 에러이고 재시도하지 않은 경우
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            console.log('401 에러 감지 - 토큰 갱신 시작')
+        // 403 에러이고 재시도하지 않은 경우
+        if (error.response?.status === 403 && !originalRequest._retry) {
+            console.log('403 에러 감지 - 토큰 갱신 시작')
 
             if (isRefreshing) {
                 console.log('이미 토큰 갱신 중 - 대기열에 추가')
@@ -132,7 +138,7 @@ authenticatedApiClient.interceptors.response.use(
                 console.error('토큰 갱신 실패:', refreshError)
 
                 // 대기 중인 요청들에게 에러 전달
-                processQueue(refreshError, null)
+                processQueue(refreshError as Error | AxiosError, null)
 
                 // 로그아웃 처리
                 const { clearAuth } = useAuthStore.getState()
@@ -141,7 +147,7 @@ authenticatedApiClient.interceptors.response.use(
                 // 로그인 페이지로 리다이렉트 (브라우저 환경에서만)
                 if (typeof window !== 'undefined') {
                     console.log('로그인 페이지로 리다이렉트')
-                    window.location.href = '/auth/login'
+                    window.location.href = '/login'
                 }
 
                 return Promise.reject(refreshError)
