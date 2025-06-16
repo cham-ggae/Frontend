@@ -5,19 +5,58 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { FadeIn, SlideIn } from "@/components/ui/animations"
 import { useTheme } from "@/contexts/theme-context"
-import { Copy, Share2, UserPlus, Check } from "lucide-react"
+import { Copy, Share2, UserPlus, Check, RefreshCw } from "lucide-react"
 import { useState } from "react"
 import { motion } from "framer-motion"
+import { useGenerateInviteCode } from "@/hooks/family"
+import { FamilySpace } from "@/types/family.type"
 
-export function FamilyInvite() {
+interface FamilyInviteProps {
+    family: FamilySpace
+}
+
+export function FamilyInvite({ family }: FamilyInviteProps) {
     const { isDarkMode } = useTheme()
-    const [inviteCode] = useState("MODI2024")
     const [copied, setCopied] = useState(false)
+    const { mutate: generateNewCode, isPending: isGenerating } = useGenerateInviteCode()
 
-    const copyInviteCode = () => {
-        navigator.clipboard.writeText(inviteCode)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
+    const copyInviteCode = async () => {
+        try {
+            await navigator.clipboard.writeText(family.inviteCode)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2000)
+        } catch (error) {
+            console.error('클립보드 복사 실패:', error)
+        }
+    }
+
+    const handleGenerateNewCode = () => {
+        generateNewCode(family.fid, {
+            onSuccess: () => {
+                setCopied(false) // 새 코드 생성시 복사 상태 리셋
+            }
+        })
+    }
+
+    const shareInviteCode = async () => {
+        const shareData = {
+            title: 'MODi 가족 스페이스 초대',
+            text: `${family.name}에서 가족 스페이스에 초대합니다! 초대 코드: ${family.inviteCode}`,
+            url: `${window.location.origin}/family/join?code=${family.inviteCode}`
+        }
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData)
+            } else {
+                // Web Share API를 지원하지 않는 경우 클립보드에 복사
+                await navigator.clipboard.writeText(shareData.text)
+                setCopied(true)
+                setTimeout(() => setCopied(false), 2000)
+            }
+        } catch (error) {
+            console.error('공유 실패:', error)
+        }
     }
 
     return (
@@ -42,12 +81,29 @@ export function FamilyInvite() {
                     </SlideIn>
 
                     <div className="space-y-4">
-                        <label className={`text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-[#4E342E]"}`}>
-                            초대 코드
-                        </label>
+                        <div className="flex items-center justify-between">
+                            <label className={`text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-[#4E342E]"}`}>
+                                초대 코드
+                            </label>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleGenerateNewCode}
+                                disabled={isGenerating}
+                                className="text-[#388E3C] hover:bg-[#81C784]/10"
+                            >
+                                {isGenerating ? (
+                                    <RefreshCw className="w-4 h-4 animate-spin" />
+                                ) : (
+                                    <RefreshCw className="w-4 h-4" />
+                                )}
+                                <span className="ml-1">새 코드 생성</span>
+                            </Button>
+                        </div>
+
                         <div className="flex gap-2">
                             <Input
-                                value={inviteCode}
+                                value={family.inviteCode}
                                 readOnly
                                 className={`flex-1 border-[#81C784] focus-visible:ring-[#81C784] text-center font-medium tracking-wider ${
                                     isDarkMode ? "bg-gray-700 text-white" : ""
@@ -70,6 +126,7 @@ export function FamilyInvite() {
                         >
                             <Button
                                 variant="default"
+                                onClick={shareInviteCode}
                                 className={`w-full bg-[#81C784] hover:bg-[#388E3C] text-white py-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200`}
                             >
                                 <Share2 className="w-5 h-5 mr-2" />

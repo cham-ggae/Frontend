@@ -30,7 +30,7 @@ export function MobileNav() {
       disabled: false,
     },
     {
-      href: "/family-space",
+      href: "/family",
       icon: Users,
       label: "가족 스페이스",
       disabled: !hasFamilySpace,

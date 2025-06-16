@@ -57,7 +57,7 @@ export function DailyMissions({ onWater }: DailyMissionProps) {
       completed: dailyActivities.message,
       action: () => {},
       buttonText: "메시지 작성하기",
-      link: "/family-space",
+      link: "/family",
     },
     {
       id: "quizOX",
