@@ -1,4 +1,4 @@
-import { familyMember } from '@/types/chat';
+import { familyMember } from '@/types/chat.type';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card"
 import ChatbotInput from './ChatbotInput';

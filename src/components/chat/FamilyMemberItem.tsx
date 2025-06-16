@@ -1,4 +1,4 @@
-import { familyMember } from '@/types/chat';
+import { familyMember } from '@/types/chat.type';
 import React, { memo } from 'react';
 
 interface FamilyMemberItemProps {

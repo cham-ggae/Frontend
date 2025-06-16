@@ -1,6 +1,6 @@
 'use client'
 import { useTheme } from '@/contexts/theme-context';
-import { familyMember } from '@/types/chat';
+import { familyMember } from '@/types/chat.type';
 import React, { Fragment } from 'react';
 import FamilyMemberItem from './FamilyMemberItem';
 interface FamilyMemberInfo {

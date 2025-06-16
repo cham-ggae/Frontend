@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import { ArrowLeft, Users } from 'lucide-react';
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label";
-import { familyMember } from '@/types/chat';
+import { familyMember } from '@/types/chat.type';
 import FamilyMemberInfo from './FamilyMemberInfo';
 import ChatMessage from './ChatMessage';
 
