@@ -1,70 +1,97 @@
-'use client'
+"use client"
 
-import { useEffect, ReactNode } from 'react'
-import { useAuthStore } from '@/lib/store/authStore'
+import { useEffect, useState, type ReactNode } from 'react'
+import { useAuthStore } from '@/store/useAuthStore'  // 통합된 스토어 사용
+import { useRouter } from 'next/navigation'
 
 interface AuthProviderProps {
     children: ReactNode
 }
 
 /**
- * 인증 상태 초기화 및 관리 Provider
- * - 앱 시작 시 토큰 확인 및 사용자 정보 복원
- * - 자동 로그아웃 처리
+ * 인증 상태 초기화 및 관리 프로바이더
  */
 export default function AuthProvider({ children }: AuthProviderProps) {
-    const { setAuth, clearAuth, setLoading } = useAuthStore()
+    const [isInitialized, setIsInitialized] = useState(false)
+    const { isLoading, isAuthenticated, accessToken, initAuth } = useAuthStore()
+    const router = useRouter()
 
     useEffect(() => {
         const initializeAuth = async () => {
+            console.log('🔄 AuthProvider 초기화 시작')
+
             try {
-                // 로딩 시작
-                setLoading(true)
+                // 1. 약간의 지연으로 초기화 보장
+                await new Promise(resolve => setTimeout(resolve, 100))
 
-                // 쿠키에서 토큰 확인
-                const accessToken = document.cookie
-                    .split('; ')
-                    .find(row => row.startsWith('accessToken='))
-                    ?.split('=')[1]
+                // 2. 인증 상태 초기화
+                initAuth()
 
-                if (!accessToken) {
-                    // 토큰이 없으면 비로그인 상태로 설정
-                    clearAuth()
-                    return
+                // 3. 토큰 유효성 검증 (선택사항)
+                if (accessToken) {
+                    console.log('🔑 기존 토큰 발견:', accessToken.substring(0, 20) + '...')
                 }
 
-                // 토큰이 있으면 사용자 정보 가져오기 시도
-                const response = await fetch(`${process.env.NEXT_PUBLIC_ADDR}/api/auth/me`, {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include'
+                console.log('✅ AuthProvider 초기화 완료:', {
+                    hasToken: !!accessToken,
+                    isAuthenticated
                 })
 
-                if (response.ok) {
-                    const userData = await response.json()
-                    // 로그인 상태로 설정
-                    setAuth(accessToken, userData)
-                } else {
-                    // 토큰이 유효하지 않으면 쿠키 삭제 후 로그아웃
-                    document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT'
-                    clearAuth()
-                }
-
             } catch (error) {
-                console.error('Auth initialization failed:', error)
-                // 에러 발생 시 안전하게 로그아웃 처리
-                document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT'
-                clearAuth()
+                console.error('❌ AuthProvider 초기화 실패:', error)
+            } finally {
+                setIsInitialized(true)
             }
         }
 
-        // 클라이언트에서만 실행
-        if (typeof window !== 'undefined') {
-            initializeAuth()
-        }
-    }, [setAuth, clearAuth, setLoading])
+        initializeAuth()
+    }, [initAuth, accessToken, isAuthenticated])
+
+    // 초기화 완료 전에는 로딩 표시
+    if (!isInitialized || isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="flex flex-col items-center space-y-4">
+                    <div className="w-8 h-8 border-4 border-[#81C784] border-t-transparent animate-spin rounded-full"></div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">인증 정보를 확인하는 중...</p>
+                </div>
+            </div>
+        )
+    }
 
     return <>{children}</>
+}
+
+/**
+ * 인증이 필요한 페이지를 보호하는 HOC
+ */
+export function withAuth<P extends object>(
+    Component: React.ComponentType<P>,
+    redirectTo: string = '/login'
+) {
+    return function AuthenticatedComponent(props: P) {
+        const { isAuthenticated, isLoading } = useAuthStore()
+        const router = useRouter()
+
+        useEffect(() => {
+            if (!isLoading && !isAuthenticated) {
+                console.log('🔄 인증되지 않은 사용자 - 로그인 페이지로 리다이렉트')
+                router.push(redirectTo)
+            }
+        }, [isAuthenticated, isLoading, router])
+
+        if (isLoading) {
+            return (
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="w-8 h-8 border-4 border-[#81C784] border-t-transparent animate-spin rounded-full"></div>
+                </div>
+            )
+        }
+
+        if (!isAuthenticated) {
+            return null
+        }
+
+        return <Component {...props} />
+    }
 }
