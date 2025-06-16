@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { familyApi } from '@/lib/api/family'
+import {FamilyDashboardResponse} from "@/types/family.type";
 
 /**
  * 내 가족 정보 조회 훅
