@@ -1,4 +1,4 @@
-import ChatBotPage from "@/pages/ChatBotPage"
+import ChatBotPage from "@/page/ChatBotPage"
 
 export default function ChatPage() {
 
