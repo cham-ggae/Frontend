@@ -1,3 +1,5 @@
+import {useMemo} from "react";
+
 export * from './useFamilyQueries'
 export * from './useFamilyMutations'
 
@@ -23,8 +25,16 @@ export const useFamily = () => {
     const currentFamilyId = familyQuery.data?.family?.fid
     const dashboardQuery = useFamilyDashboard(currentFamilyId)
 
+    const derivedState = useMemo(() => ({
+        hasFamily: !!familyQuery.data,
+        familyId: familyQuery.data?.family?.fid,
+        memberCount: familyQuery.data?.members?.length || 0,
+        canInvite: (familyQuery.data?.members?.length || 0) < 5
+    }), [familyQuery.data])
+
     return {
         // 데이터
+        ...derivedState,
         family: familyQuery.data,
         dashboard: dashboardQuery.data,
 
