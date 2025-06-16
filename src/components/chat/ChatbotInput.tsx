@@ -89,7 +89,7 @@ export default function ChatbotInput({
               ? '가족 요금제에 대해 궁금한 점을 물어보세요...'
               : '메시지를 입력하세요...'
           }
-          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+          onKeyPress={(e) => (e.key === 'Enter' && !isStreaming) && handleSend()}
           className={`flex-1 border-[#81C784] focus-visible:ring-[#81C784] ${isDarkMode ? 'bg-gray-700 text-white' : ''
             }`}
         />
