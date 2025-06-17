@@ -14,11 +14,13 @@ import { v4 as uuidv4 } from 'uuid'
 interface ChatbotInputProps {
   isFamilyMode: boolean
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+  sessionId: string;
 }
 
 export default function ChatbotInput({
   isFamilyMode,
   setMessages,
+  sessionId
 }: ChatbotInputProps) {
   const { isDarkMode } = useTheme()
   const [inputValue, setInputValue] = useState('')
@@ -38,6 +40,7 @@ export default function ChatbotInput({
       content: inputValue,
       isUser: true,
       timestamp: new Date(),
+      sessionId: sessionId
     }
 
     // 2) AI placeholder 메시지 추가 (content는 빈 문자열로 시작)
@@ -48,6 +51,7 @@ export default function ChatbotInput({
       content: '',
       isUser: false,
       timestamp: new Date(),
+      sessionId: sessionId
     }
 
     setMessages((prev) => [...prev, userMsg, aiMsg])

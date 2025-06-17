@@ -11,8 +11,9 @@ import ChatMessage from './ChatMessage';
 
 interface ChatHeaderProps {
   isDarkMode: boolean;
+  sessionId: string;
 }
-const ChatHeader = ({ isDarkMode }: ChatHeaderProps) => {
+const ChatHeader = ({ isDarkMode, sessionId }: ChatHeaderProps) => {
 
   const [isFamilyMode, setIsFamilyMode] = useState(false);
   const handleFamilyModeToggle = (checked: boolean) => {
@@ -76,7 +77,7 @@ const ChatHeader = ({ isDarkMode }: ChatHeaderProps) => {
         </div>
       </header>
       <FamilyMemberInfo isFamilyMode={isFamilyMode} familyMembers={familyMembers} />
-      <ChatMessage isFamilyMode={isFamilyMode} isDarkMode={isDarkMode} familyMembers={familyMembers} />
+      <ChatMessage isFamilyMode={isFamilyMode} isDarkMode={isDarkMode} familyMembers={familyMembers} sessionId={sessionId} />
     </div>
   );
 };
