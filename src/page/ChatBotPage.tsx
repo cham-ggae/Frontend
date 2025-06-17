@@ -7,9 +7,7 @@ import React, { useState } from 'react';
 const ChatBotPage = () => {
   const { isDarkMode } = useTheme();
   const [sessionId] = useState(() =>
-    // 모던 브라우저라면
     window.crypto?.randomUUID?.() ??
-    // 폴백
     `${Date.now()}-${Math.random().toString(36).slice(2)}`
   )
 
