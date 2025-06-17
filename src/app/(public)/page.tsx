@@ -96,35 +96,7 @@ export default function HomePage() {
 
   return (
     <div className={`min-h-screen ${isDarkMode ? "bg-gray-900 text-white" : "bg-green-50"}`}>
-      {/* Header */}
-      <motion.header
-        className={`${isDarkMode ? "bg-gray-800" : "bg-green-50"} py-6`}
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <motion.div
-            className="text-2xl font-bold text-green-700"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            MODi
-          </motion.div>
-          <motion.div
-            className="flex items-center gap-4"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <ThemeToggle className="border-gray-300" />
-            <Link href="/basic-info">
-              <KakaoLoginButton />
-            </Link>
-          </motion.div>
-        </div>
-      </motion.header>
+
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-6 py-16">
@@ -299,58 +271,49 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
+      {/* CTA Section */}
       <motion.section
-        className={`${isDarkMode ? "bg-gray-800" : "bg-green-100/30"} py-20`}
-        variants={ctaVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+          className={`${isDarkMode ? "bg-gray-800" : "bg-green-100/30"} py-24`}
+          variants={ctaVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
       >
-        <div className="max-w-4xl mx-auto px-6 text-center">
+        <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.h2
-            className={`text-4xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-green-800"}`}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0 }}
-            viewport={{ once: true }}
+              className={`text-5xl md:text-6xl font-bold mb-8 ${isDarkMode ? "text-white" : "text-green-800"} leading-tight`}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0 }}
+              viewport={{ once: true }}
           >
             지금 바로 시작하세요
           </motion.h2>
           <motion.p
-            className={`text-xl mb-8 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            viewport={{ once: true }}
+              className={`text-xl md:text-2xl mb-12 max-w-4xl mx-auto ${isDarkMode ? "text-gray-300" : "text-gray-700"} leading-relaxed`}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              viewport={{ once: true }}
           >
             MODi와 함께 최적의 통신 요금제를 찾고, 가족과 함께 디지털 생활을 더 스마트하게 관리해보세요.
           </motion.p>
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
+              className="pt-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
           >
             <Link href="/basic-info">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <KakaoLoginButton />
               </motion.div>
             </Link>
           </motion.div>
         </div>
       </motion.section>
 
-      {/* Footer */}
-      <motion.footer
-        className="bg-green-600 text-white py-8"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-      >
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-green-100">© 2025 MODi. All rights reserved.</p>
-        </div>
-      </motion.footer>
     </div>
   )
 }

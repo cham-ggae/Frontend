@@ -28,7 +28,7 @@ export default function BasicInfoPage() {
     <div className={`min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       <header className={`${isDarkMode ? "bg-gray-800 shadow-gray-700" : "bg-white shadow-sm"}`}>
         <div className="max-w-md mx-auto px-4 py-3 flex items-center">
-          <Link href="/">
+          <Link href="/public">
             <Button variant="ghost" size="sm" className={isDarkMode ? "text-gray-300" : ""}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
