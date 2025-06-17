@@ -8,22 +8,25 @@ import TtsButton from './TtsButton'
 import { familyMember } from '@/types/chat'
 
 export interface Message {
-  id: string
-  content: string
-  isUser: boolean
-  timestamp: Date
+  id: string;
+  content: string;
+  isUser: boolean;
+  timestamp: Date;
+  sessionId: string;
 }
 
 interface ChatMessageProps {
-  isFamilyMode: boolean
-  familyMembers: familyMember[]
-  isDarkMode: boolean
+  isFamilyMode: boolean;
+  familyMembers: familyMember[];
+  isDarkMode: boolean;
+  sessionId: string;
 }
 
 export default function ChatMessage({
   isFamilyMode,
   familyMembers,
   isDarkMode,
+  sessionId
 }: ChatMessageProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -34,9 +37,12 @@ export default function ChatMessage({
           : '"안녕하세요! 개인 맞춤형 요금제 추천을 위한 MODi 챗봇입니다. 당신의 통신 상황에 맞는 최적의 요금제를 찾아드릴게요!"',
       isUser: false,
       timestamp: new Date(),
+      sessionId: sessionId
     },
   ])
-
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const scrollToBottom = () =>
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -85,7 +91,7 @@ export default function ChatMessage({
       </div>
 
       {/* 입력 컴포넌트에 setMessages 넘겨 줍니다 */}
-      <ChatbotInput isFamilyMode={isFamilyMode} setMessages={setMessages} />
+      <ChatbotInput isFamilyMode={isFamilyMode} setMessages={setMessages} sessionId={sessionId} />
     </Fragment>
   )
 }
