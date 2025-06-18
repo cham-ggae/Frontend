@@ -10,7 +10,7 @@ export function useChatStream() {
   const [error, setError] = useState<Error | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
 
-  const start = useCallback(async (prompt: string) => {
+  const start = useCallback(async (prompt: string, sessionId: string) => {
     controllerRef.current?.abort();
     setMessage('');
     setError(null);
@@ -25,7 +25,7 @@ export function useChatStream() {
     controllerRef.current = controller;
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_ADDR}/chat?prompt=${encodeURIComponent(`${prompt} LGU+`)}`,
+        `${process.env.NEXT_PUBLIC_ADDR}/chat?sessionId=${encodeURIComponent(sessionId)}&prompt=${encodeURIComponent(`${prompt} (요금제 추천 시 LGU+만)`)}`,
         {
           headers: { 'Authorization': `Bearer ${accessToken}` },
           credentials: 'include',
@@ -52,6 +52,7 @@ export function useChatStream() {
           const jsonString = part.replace(/^data:/, '').trim();
           try {
             const chunk = JSON.parse(jsonString) as ChatCompletionChunk;
+            console.log(chunk);
             const choice = chunk.choices[0];
             if (choice.finish_reason) {
               controller.abort();

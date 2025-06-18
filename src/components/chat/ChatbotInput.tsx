@@ -57,7 +57,7 @@ export default function ChatbotInput({
     setMessages((prev) => [...prev, userMsg, aiMsg])
 
     // 3) 스트리밍 시작
-    start(inputValue)
+    start(inputValue, sessionId)
     setInputValue('')
   }
 
