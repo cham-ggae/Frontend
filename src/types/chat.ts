@@ -16,9 +16,7 @@ export interface familyMember {
 
 // Δ(델타) 객체
 export interface ChatCompletionDelta {
-  role?: "system" | "user" | "assistant";
   content?: string;
-  refusal?: any; // 취사선택: refusal 타입이 정해져 있으면 구체화
 }
 
 // choices 요소
@@ -38,4 +36,21 @@ export interface ChatCompletionChunk {
   service_tier: string;
   system_fingerprint: string;
   choices: ChatCompletionChunkChoice[];
+}
+
+export interface Chatting {
+  cid: number;
+  uid: number;
+  role: string;
+  content: string;
+  created_at: string;
+  session_id: string;
+}
+
+export interface ClientMessage {
+  id: string;
+  content: string;
+  role: string;
+  timestamp: Date;
+  sessionId: string;
 }

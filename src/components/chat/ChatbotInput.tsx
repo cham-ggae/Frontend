@@ -3,17 +3,17 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import { Button } from '../ui/button'
-import { Mic, Send } from 'lucide-react'
+import { Send } from 'lucide-react'
 import { Input } from '../ui/input'
 import { useTheme } from '@/contexts/theme-context'
 import SttButton from './SttButton'
 import { useChatStream } from '@/hooks/useChatStream'
-import { Message } from './ChatMessage'
 import { v4 as uuidv4 } from 'uuid'
+import { ClientMessage } from '@/types/chat'
 
 interface ChatbotInputProps {
   isFamilyMode: boolean
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+  setMessages: React.Dispatch<React.SetStateAction<ClientMessage[]>>
   sessionId: string;
 }
 
@@ -35,10 +35,10 @@ export default function ChatbotInput({
     if (!inputValue.trim()) return
 
     // 1) 사용자 메시지 추가
-    const userMsg: Message = {
+    const userMsg: ClientMessage = {
       id: uuidv4(),
       content: inputValue,
-      isUser: true,
+      role: "user",
       timestamp: new Date(),
       sessionId: sessionId
     }
@@ -46,10 +46,10 @@ export default function ChatbotInput({
     // 2) AI placeholder 메시지 추가 (content는 빈 문자열로 시작)
     const aiId = uuidv4()
     aiMessageIdRef.current = aiId
-    const aiMsg: Message = {
+    const aiMsg: ClientMessage = {
       id: aiId,
       content: '',
-      isUser: false,
+      role: "bot",
       timestamp: new Date(),
       sessionId: sessionId
     }

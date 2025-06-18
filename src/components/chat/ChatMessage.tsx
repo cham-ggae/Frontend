@@ -5,15 +5,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import ChatbotInput from './ChatbotInput'
 import TtsButton from './TtsButton'
-import { familyMember } from '@/types/chat'
-
-export interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-  sessionId: string;
-}
+import { ClientMessage, familyMember } from '@/types/chat'
 
 interface ChatMessageProps {
   isFamilyMode: boolean;
@@ -28,14 +20,14 @@ export default function ChatMessage({
   isDarkMode,
   sessionId
 }: ChatMessageProps) {
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<ClientMessage[]>([
     {
-      id: 'welcome',
+      id: "welcome",
       content:
         isFamilyMode && familyMembers.length > 0
           ? `안녕하세요! 가족 맞춤형 요금제 추천 챗봇 MODi입니다. 현재 ${familyMembers.length}명 가족 정보를 바탕으로 도와드릴게요! 💕`
           : '"안녕하세요! 개인 맞춤형 요금제 추천을 위한 MODi 챗봇입니다. 당신의 통신 상황에 맞는 최적의 요금제를 찾아드릴게요!"',
-      isUser: false,
+      role: "bot",
       timestamp: new Date(),
       sessionId: sessionId
     },
@@ -53,18 +45,18 @@ export default function ChatMessage({
     <Fragment>
       <div className="flex-1 overflow-y-auto p-4 max-w-5xl mx-auto w-full">
         <div className="space-y-4">
-          {messages.map((msg) => (
+          {messages.map((msg, idx) => (
             <div
-              key={msg.id}
-              className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}
+              key={idx}
+              className={`flex ${msg.role != "bot" ? 'justify-end' : 'justify-start'}`}
             >
-              {!msg.isUser && (
+              {msg.role === "bot" && (
                 <div className="w-8 h-8 rounded-full bg-[#81C784] flex items-center justify-center mr-2 flex-shrink-0">
                   <span className="text-white text-xs font-bold">AI</span>
                 </div>
               )}
               <Card
-                className={`max-w-[80%] ${msg.isUser
+                className={`max-w-[80%] ${msg.role !== "bot"
                   ? 'bg-[#388E3C] text-white border-[#388E3C]'
                   : isDarkMode
                     ? 'bg-gray-700 border-gray-600 text-white'
@@ -80,7 +72,7 @@ export default function ChatMessage({
                         minute: '2-digit',
                       })}
                     </span>
-                    {!msg.isUser && <TtsButton />}
+                    {msg.role === "bot" && <TtsButton />}
                   </div>
                 </CardContent>
               </Card>

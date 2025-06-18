@@ -67,7 +67,7 @@ export function useChatStream() {
           }
         }
       }
-    } catch (e: any) {
+    } catch (e) {
       if (e.name !== 'AbortError') setError(e);
     } finally {
       setIsStreaming(false);
